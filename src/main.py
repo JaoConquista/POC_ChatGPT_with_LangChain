@@ -11,9 +11,15 @@ load_dotenv()
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 # Step 1: Read PDF and split into pages
-loader = PyPDFLoader("../data/yourfile.pdf")
-pages = loader.load_and_split()
-chunks = pages
+counter = 0
+chunks = []
+for file in os.listdir("../data"):
+    counter += 1
+    print(f"\033[32mfile_{counter}: {file}\033[0m")
+    loader = PyPDFLoader(f"../data/{file}")
+    pages = loader.load_and_split()
+    chunks = pages + chunks
+print(chunks)
 
 # Get embedding model
 embeddings = OpenAIEmbeddings()
@@ -22,7 +28,7 @@ embeddings = OpenAIEmbeddings()
 db = FAISS.from_documents(chunks, embeddings)
 
 # Create conversation chain that uses our vectordb as retriver, this also allows for chat history management
-qa = ConversationalRetrievalChain.from_llm(OpenAI(temperature=1, streaming=True), db.as_retriever())
+qa = ConversationalRetrievalChain.from_llm(OpenAI(temperature=0.5, streaming=True), db.as_retriever())
 
 chat_history = []
 
@@ -30,6 +36,7 @@ print("Welcome to the Transformers chatbot!")
 
 while True:
     query = input("Please enter your question about the document: ")
+    docs = db.similarity_search(query)
     
     if query.lower() == 'exit':
         print("Thank you for using the chatbot!")
@@ -41,4 +48,4 @@ while True:
     print(f'\033[33mUser: {query}\033[0m') 
     print(f'\033[34mChatbot: {result["answer"]}\033[0m')
     #If you want to see the full context, uncomment the line below
-    #print(f'Font: {docs}')
+    print(f'Font: {docs}')
