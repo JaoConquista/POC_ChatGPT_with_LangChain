@@ -7,7 +7,7 @@ Using the app :
 
 * Step 2 - Add you pdf file in the folder "data"
 
-* Step 3 - create a '.env' file and Insert your openai api key in the environment variable named as "OPENAI_API_KEY"
+* Step 3 - On .env file insert your openai api key in the environment variable named as "OPENAI_API_KEY"
     example = OPENAI_API_KEY = "Your key here"
 
 * Step 4 - Open terminal in the directory src and run : python main.py
