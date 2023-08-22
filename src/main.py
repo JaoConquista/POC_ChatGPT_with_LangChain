@@ -19,7 +19,6 @@ for file in os.listdir("../data"):
     loader = PyPDFLoader(f"../data/{file}")
     pages = loader.load_and_split()
     chunks = pages + chunks
-print(chunks)
 
 # Get embedding model
 embeddings = OpenAIEmbeddings()
@@ -32,7 +31,7 @@ qa = ConversationalRetrievalChain.from_llm(OpenAI(temperature=0.5, streaming=Tru
 
 chat_history = []
 
-print("Welcome to the Transformers chatbot!")
+print("Welcome to the PDFs chatbot!")
 
 while True:
     query = input("Please enter your question about the document: ")
